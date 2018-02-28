@@ -39,35 +39,6 @@ import ch.voulgarakis.icsc2018.recruitment.utils.SkillAndWeight;
 // @ActiveProfiles("rest")
 // @Transactional
 public class TestMicroservices {
-    // Startup the different microservices
-    // static {
-    // // Eureka
-    // Properties propsEureka = new Properties();
-    // propsEureka.setProperty("spring.config.name", "eureka");
-    // propsEureka.setProperty("spring.cloud.bootstrap.name", "eureka-bootstrap");
-    // SpringApplicationBuilder builder1 = new SpringApplicationBuilder(EurekaServer.class);
-    // builder1.properties(propsEureka).run(new String[] { "" });
-    //
-    // // Recruitment Microservice
-    // Properties propsRecruitment = new Properties();
-    // propsRecruitment.setProperty("spring.config.name", "microservice");
-    // propsRecruitment.setProperty("spring.cloud.bootstrap.name", "microservice-bootstrap");
-    // SpringApplicationBuilder builder2 = new SpringApplicationBuilder(RecruitmentServer.class);
-    // builder2.properties(propsRecruitment).run(new String[] { "" });
-    //
-    // // Skill Microservice
-    // Properties propsSkills = new Properties();
-    // propsSkills.setProperty("spring.config.name", "microservice");
-    // propsSkills.setProperty("spring.cloud.bootstrap.name", "skill-service-bootstrap");
-    // new SpringApplicationBuilder(SkillServer.class).properties(propsSkills).run(new String[] { "" });
-    //
-    // // Applicant Microservice
-    // Properties propsApplicant = new Properties();
-    // propsApplicant.setProperty("spring.config.name", "microservice");
-    // propsApplicant.setProperty("spring.cloud.bootstrap.name", "applicant-service-bootstrap");
-    // new SpringApplicationBuilder(ApplicantServer.class).properties(propsApplicant).run(new String[] { "" });
-    // }
-
     Logger logger = LoggerFactory.getLogger(TestMicroservices.class);
     String url = "http://localhost:8766/recruitment-service";
 
