@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import ch.voulgarakis.icsc2018.chat.config.WebSocketConfig;
 import ch.voulgarakis.icsc2018.recruitment.config.CustomPropertySourceLocator;
 import ch.voulgarakis.icsc2018.recruitment.controller.MatchController;
+import ch.voulgarakis.icsc2018.recruitment.controller.impl.CRUDStateController;
 import ch.voulgarakis.icsc2018.recruitment.controller.impl.RecruitmentControllerImpl;
 import ch.voulgarakis.icsc2018.recruitment.controller.interfaces.RecruitmentController;
 import ch.voulgarakis.icsc2018.recruitment.events.WebsocketSessionTracker;
@@ -46,6 +47,11 @@ public class RecruitmentServer {
     @Bean
     public RecruitmentController recruitmentController() {
         return new RecruitmentControllerImpl();
+    }
+
+    @Bean
+    public CRUDStateController cRUDStateController() {
+        return new CRUDStateController();
     }
 
     @Bean

@@ -1,16 +1,29 @@
-package ch.voulgarakis.microservices.tests;
+package ch.voulgarakis.recruitment.tests;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
 import ch.voulgarakis.icsc2018.recruitment.model.Applicant;
@@ -19,13 +32,13 @@ import ch.voulgarakis.icsc2018.recruitment.model.Skill;
 import ch.voulgarakis.icsc2018.recruitment.model.Vacancy;
 import ch.voulgarakis.icsc2018.recruitment.utils.SkillAndWeight;
 
-// @RunWith(SpringJUnit4ClassRunner.class)
-// @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-// @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-// @ContextConfiguration(classes = TestConfig.class) // Setup test with TestConfig
+@RunWith(SpringJUnit4ClassRunner.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@SpringBootTest
+@ContextConfiguration(classes = TestConfig.class) // Setup test with TestConfig
 // @ActiveProfiles("rest")
 // @Transactional
-public class TestMicroserviceREST {
+public class TestMicroservices {
     // Startup the different microservices
     // static {
     // // Eureka
@@ -55,10 +68,26 @@ public class TestMicroserviceREST {
     // new SpringApplicationBuilder(ApplicantServer.class).properties(propsApplicant).run(new String[] { "" });
     // }
 
-    Logger logger = LoggerFactory.getLogger(TestMicroserviceREST.class);
+    Logger logger = LoggerFactory.getLogger(TestMicroservices.class);
     String url = "http://localhost:8766/recruitment-service";
 
-    private RestTemplate rest = new RestTemplate();
+    @Autowired
+    private RestTemplate rest;
+    private static RestTemplate restForDouble;
+    static {
+        restForDouble = new RestTemplate();
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+        messageConverters.add(new FormHttpMessageConverter());
+        messageConverters.add(new StringHttpMessageConverter());
+        messageConverters.add(new MappingJackson2HttpMessageConverter());
+        // messageConverters.add(new MappingJackson2XmlHttpMessageConverter());
+        messageConverters.add(new ByteArrayHttpMessageConverter());
+        // messageConverters.add(new ResourceHttpMessageConverter());
+        // messageConverters.add(new SourceHttpMessageConverter<Source>());
+        // messageConverters.add(new AllEncompassingFormHttpMessageConverter());
+        // messageConverters.add(new TypeConstrainedMappingJackson2HttpMessageConverter(Skill.class));
+        restForDouble.setMessageConverters(messageConverters);
+    }
 
     @Test
     public void test2CreateApplicantsAndVacancies() {
@@ -117,39 +146,39 @@ public class TestMicroserviceREST {
         // GET from all the CRUD DBs the number of their entries
         ///////////
         logger.info("Added Johnny, Claus, Santa, Scar, BeAGoodGuy...");
-        // String ret = "";
-        // // Now display the Skill repository
-        // ret += "\n" + String.format("Skill repository contents: %d",
-        // rest.getForEntity(url + "/skill", List.class).getBody().size());
-        // for (Object skill : rest.getForEntity(url + "/skill", List.class).getBody())
-        // ret += "\n" + String.format("\t%s", skill);
-        // ret += "\n" + String.format("----------------");
-        // // Now display the Application repository
-        // ret += "\n" + String.format("Application repository contents: %d",
-        // rest.getForEntity(url + "/applicant", List.class).getBody().size());
-        // for (Object app : rest.getForEntity(url + "/applicant", List.class).getBody())
-        // ret += "\n" + String.format("\t%s", app);
-        // ret += "\n" + String.format("----------------");
-        // // Now display the Vacancy repository
-        // ret += "\n" + String.format("Vacancy repository contents: %d",
-        // rest.getForEntity(url + "/vacancy", List.class).getBody().size());
-        // for (Object vac : rest.getForEntity(url + "/vacancy", List.class).getBody())
-        // ret += "\n" + String.format("\t%s", vac);
-        // ret += "\n" + String.format("----------------");
-        // logger.info(ret);
-        // assertTrue("Skill Repository ended up with more entries... Check for duplicates...",
-        // rest.getForEntity(url + "/skill", List.class).getBody().size() == 6);
-        // assertTrue("Applicant Repository ended up with more entries... Check for duplicates...",
-        // rest.getForEntity(url + "/applicant", List.class).getBody().size() == 3);
-        // assertTrue("Vacancy Repository ended up with more entries... Check for duplicates...",
-        // rest.getForEntity(url + "/vacancy", List.class).getBody().size() == 2);
+        String ret = "";
+        // Now display the Skill repository
+        ret += "\n" + String.format("Skill repository contents: %d",
+                rest.getForEntity(url + "/skill", List.class).getBody().size());
+        for (Object skill : rest.getForEntity(url + "/skill", List.class).getBody())
+            ret += "\n" + String.format("\t%s", skill);
+        ret += "\n" + String.format("----------------");
+        // Now display the Application repository
+        ret += "\n" + String.format("Application repository contents: %d",
+                rest.getForEntity(url + "/applicant", List.class).getBody().size());
+        for (Object app : rest.getForEntity(url + "/applicant", List.class).getBody())
+            ret += "\n" + String.format("\t%s", app);
+        ret += "\n" + String.format("----------------");
+        // Now display the Vacancy repository
+        ret += "\n" + String.format("Vacancy repository contents: %d",
+                rest.getForEntity(url + "/vacancy", List.class).getBody().size());
+        for (Object vac : rest.getForEntity(url + "/vacancy", List.class).getBody())
+            ret += "\n" + String.format("\t%s", vac);
+        ret += "\n" + String.format("----------------");
+        logger.info(ret);
+        assertTrue("Skill Repository ended up with more entries... Check for duplicates...",
+                rest.getForEntity(url + "/skill", List.class).getBody().size() == 6);
+        assertTrue("Applicant Repository ended up with more entries... Check for duplicates...",
+                rest.getForEntity(url + "/applicant", List.class).getBody().size() == 3);
+        assertTrue("Vacancy Repository ended up with more entries... Check for duplicates...",
+                rest.getForEntity(url + "/vacancy", List.class).getBody().size() == 2);
 
     }
 
     @Test
     public void test3ApplyClausForSanta() {
         // Claus can apply to become santa?
-        ResponseEntity<Double> getResponse = rest.exchange(
+        ResponseEntity<Double> getResponse = restForDouble.exchange(
                 url + "/recruitment/apply?applicantName=Claus&vacancyName=Santa", HttpMethod.PUT, null, Double.class);
         Double fit = getResponse.getBody();
         logger.info("\n\tgetResponse: {}", getResponse);
@@ -193,8 +222,8 @@ public class TestMicroserviceREST {
         ///////////
         // Send a 1st DELETE
         ///////////
-        ResponseEntity<Application> deleteResponse1 = rest.exchange(url + "/application", HttpMethod.DELETE, null,
-                Application.class);
+        ResponseEntity<Application> deleteResponse1 = rest.exchange(url + "/application", HttpMethod.DELETE,
+                HttpEntity.EMPTY, Application.class);
         logger.info("\n\tdeleteResponse1: {}", deleteResponse1);
         assertTrue("1st DELETE should have returned NoContent",
                 deleteResponse1.getStatusCode().equals(HttpStatus.NO_CONTENT));
@@ -202,8 +231,8 @@ public class TestMicroserviceREST {
         ///////////
         // Send a 2nd DELETE
         ///////////
-        ResponseEntity<Applicant> deleteResponse2 = rest.exchange(url + "/applicant", HttpMethod.DELETE, null,
-                Applicant.class);
+        ResponseEntity<Applicant> deleteResponse2 = rest.exchange(url + "/applicant", HttpMethod.DELETE,
+                HttpEntity.EMPTY, Applicant.class);
         logger.info("\n\tdeleteResponse2: {}", deleteResponse2);
         assertTrue("1st DELETE should have returned NoContent",
                 deleteResponse2.getStatusCode().equals(HttpStatus.NO_CONTENT));
@@ -211,7 +240,7 @@ public class TestMicroserviceREST {
         ///////////
         // Send a 3rd DELETE
         ///////////
-        ResponseEntity<Vacancy> deleteResponse3 = rest.exchange(url + "/vacancy", HttpMethod.DELETE, null,
+        ResponseEntity<Vacancy> deleteResponse3 = rest.exchange(url + "/vacancy", HttpMethod.DELETE, HttpEntity.EMPTY,
                 Vacancy.class);
         logger.info("\n\tdeleteResponse3: {}", deleteResponse3);
         assertTrue("1st DELETE should have returned NoContent",
@@ -220,7 +249,8 @@ public class TestMicroserviceREST {
         ///////////
         // Send a 4th DELETE
         ///////////
-        ResponseEntity<Skill> deleteResponse4 = rest.exchange(url + "/skill", HttpMethod.DELETE, null, Skill.class);
+        ResponseEntity<Skill> deleteResponse4 = rest.exchange(url + "/skill", HttpMethod.DELETE, HttpEntity.EMPTY,
+                Skill.class);
         logger.info("\n\tdeleteResponse1: {}", deleteResponse4);
         assertTrue("1st DELETE should have returned NoContent",
                 deleteResponse4.getStatusCode().equals(HttpStatus.NO_CONTENT));
