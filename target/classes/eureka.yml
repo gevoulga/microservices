@@ -1,7 +1,9 @@
 # Spring Properties
 spring:
   application:
-     name: eureka-discovery
+    name: eureka-discovery
+  jmx:
+    default-domain: eureka-discovery
 
 # HTTP Server
 server:

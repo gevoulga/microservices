@@ -6,11 +6,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -29,25 +27,25 @@ public class Applicant {
 
     private String name; // The name of the applicant
 
-    @Embedded
-    private SkillList skillSet; // The competences of the application
+    @ElementCollection
+    private List<String> skillSet; // The competences of the application
 
     @ElementCollection
     private List<Double> skillStrength; // The strength of each skill
 
-    @OneToMany(mappedBy = "applicant")
-    private List<Application> applications = new ArrayList<>(); // // The applications of this applicant
+    @ElementCollection
+    private List<Long> applications = new ArrayList<>(); // // The applications of this applicant
 
     protected Applicant() {
         // Empty constructor
-        skillSet = new SkillList();
+        skillSet = new ArrayList<>();
         skillStrength = new ArrayList<>();
     }
 
     public Applicant(String name, SkillAndWeight... skillsAndStrength) {
         this.name = name;
-        this.skillSet = new SkillList(
-                Stream.of(skillsAndStrength).parallel().map(e -> e.getSkill()).collect(Collectors.toList()));
+        this.skillSet = Stream.of(skillsAndStrength).parallel().map(e -> e.getSkill().getId())
+                .collect(Collectors.toList());
         this.skillStrength = Stream.of(skillsAndStrength).parallel().map(e -> e.getWeight())
                 .collect(Collectors.toList());
     }
@@ -56,15 +54,19 @@ public class Applicant {
         return name;
     }
 
-    public List<Skill> getSkillSet() {
-        return skillSet.getSkills();
+    public Long getId() {
+        return id;
+    }
+
+    public List<String> getSkillSet() {
+        return skillSet;
     }
 
     public List<Double> getSkillStrength() {
         return skillStrength;
     }
 
-    public List<Application> getApplications() {
+    public List<Long> getApplications() {
         return applications;
     }
 

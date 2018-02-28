@@ -6,11 +6,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -28,26 +26,26 @@ public class Vacancy {
 
     private String name;
 
-    @Embedded
-    private SkillList requiredSkills; // The skills required for the position
+    @ElementCollection
+    private List<String> requiredSkills; // The skills required for the position
 
     @ElementCollection
     private List<Double> requiredSkillWeights; // The importance of each skill for the position
 
-    @OneToMany(mappedBy = "vacancy")
-    private List<Application> applications = new ArrayList<>(); // The applications for the vacancy
+    @ElementCollection
+    private List<Long> applications = new ArrayList<>(); // The applications for the vacancy
 
     protected Vacancy() {
         // Empty constructor
-        requiredSkills = new SkillList();
+        requiredSkills = new ArrayList<>();
         requiredSkillWeights = new ArrayList<>();
     }
 
     public Vacancy(String name, SkillAndWeight... requiredSkillsAndImportance) {
         super();
         this.name = name;
-        this.requiredSkills = new SkillList(
-                Stream.of(requiredSkillsAndImportance).parallel().map(e -> e.getSkill()).collect(Collectors.toList()));
+        this.requiredSkills = Stream.of(requiredSkillsAndImportance).parallel().map(e -> e.getSkill().getId())
+                .collect(Collectors.toList());
         this.requiredSkillWeights = Stream.of(requiredSkillsAndImportance).parallel().map(e -> e.getWeight())
                 .collect(Collectors.toList());
     }
@@ -56,15 +54,19 @@ public class Vacancy {
         return name;
     }
 
-    public List<Skill> getRequiredSkills() {
-        return requiredSkills.getSkills();
+    public Long getId() {
+        return id;
+    }
+
+    public List<String> getRequiredSkills() {
+        return requiredSkills;
     }
 
     public List<Double> getRequiredSkillWeights() {
         return requiredSkillWeights;
     }
 
-    public List<Application> getApplications() {
+    public List<Long> getApplications() {
         return applications;
     }
 

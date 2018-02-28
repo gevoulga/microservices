@@ -5,9 +5,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import org.springframework.hateoas.ResourceSupport;
 
-import ch.voulgarakis.icsc2018.recruitment.controller.CRUDApplicantController;
-import ch.voulgarakis.icsc2018.recruitment.controller.CRUDSkillController;
-import ch.voulgarakis.icsc2018.recruitment.controller.CRUDVacancyController;
+import ch.voulgarakis.icsc2018.recruitment.controller.impl.CRUDApplicantController;
+import ch.voulgarakis.icsc2018.recruitment.controller.impl.CRUDSkillController;
+import ch.voulgarakis.icsc2018.recruitment.controller.impl.CRUDVacancyController;
 import ch.voulgarakis.icsc2018.recruitment.model.Vacancy;
 
 public class VacancyResource extends ResourceSupport {
