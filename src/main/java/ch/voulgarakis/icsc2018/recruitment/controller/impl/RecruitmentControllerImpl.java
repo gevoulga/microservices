@@ -3,14 +3,13 @@ package ch.voulgarakis.icsc2018.recruitment.controller.impl;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.fromMethodCall;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
@@ -69,14 +68,14 @@ public class RecruitmentControllerImpl implements RecruitmentController {
     }
 
     @Override
-    public ResponseEntity<Double> apply(@PathParam("applicantId") long applicantId,
-            @PathParam("vacancyId") long vacancyId) {
+    public ResponseEntity<Double> apply(@RequestParam("applicantId") long applicantId,
+            @RequestParam("vacancyId") long vacancyId) {
         return new ResponseEntity<>(rs.apply(applicantId, vacancyId), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Double> apply(@PathParam("applicantName") String applicantName,
-            @PathParam("vacancyName") String vacancyName) {
+    public ResponseEntity<Double> apply(@RequestParam("applicantName") String applicantName,
+            @RequestParam("vacancyName") String vacancyName) {
         return new ResponseEntity<>(rs.apply(rs.loadApplicant(applicantName), rs.loadVacancy(vacancyName)),
                 HttpStatus.OK);
     }

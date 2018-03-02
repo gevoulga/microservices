@@ -1,12 +1,11 @@
 package ch.voulgarakis.icsc2018.recruitment.controller.interfaces;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ch.voulgarakis.icsc2018.recruitment.model.Applicant;
 import ch.voulgarakis.icsc2018.recruitment.model.Application;
@@ -30,10 +29,10 @@ public interface RecruitmentController {
     public ResponseEntity<Double> apply(@RequestBody Application applicantVacancy);
 
     @RequestMapping(value = "/apply", method = RequestMethod.PUT, params = { "applicantId", "vacancyId" })
-    public ResponseEntity<Double> apply(@PathParam("applicantId") long applicantId,
-            @PathParam("vacancyId") long vacancyId);
+    public ResponseEntity<Double> apply(@RequestParam("applicantId") long applicantId,
+            @RequestParam("vacancyId") long vacancyId);
 
     @RequestMapping(value = "/apply", method = RequestMethod.PUT, params = { "applicantName", "vacancyName" })
-    public ResponseEntity<Double> apply(@PathParam("applicantName") String applicantName,
-            @PathParam("vacancyName") String vacancyName);
+    public ResponseEntity<Double> apply(@RequestParam("applicantName") String applicantName,
+            @RequestParam("vacancyName") String vacancyName);
 }
